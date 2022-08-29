@@ -193,22 +193,25 @@ module Dependabot
 
       # rubocop:disable Metrics/PerceivedComplexity
       def version_commit_message_intro
+        dependency = dependencies.first
+
         return multidependency_property_intro if dependencies.count > 1 && updating_a_property?
 
         return dependency_set_intro if dependencies.count > 1 && updating_a_dependency_set?
 
+        return vulnerable_multidependency_intro if dependencies.count > 1 && vulnerabilities_fixed.any?
+
         return multidependency_intro if dependencies.count > 1
 
-        dependency = dependencies.first
         msg = "Bumps #{dependency_links.first} "\
               "#{from_version_msg(previous_version(dependency))}"\
               "to #{new_version(dependency)}."
 
         msg += " This release includes the previously tagged commit." if switching_from_ref_to_release?(dependency)
 
-        if vulnerabilities_fixed[dependency.name]&.one?
+        if vulnerabilities_fixed.one?{|d| d.name == dependency.name}
           msg += " **This update includes a security fix.**"
-        elsif vulnerabilities_fixed[dependency.name]&.any?
+        elsif vulnerabilities_fixed.any?{|d| d.name == dependency.name}
           msg += " **This update includes security fixes.**"
         end
 
@@ -237,6 +240,20 @@ module Dependabot
         "Bumps #{dependency_links[0..-2].join(', ')} "\
         "and #{dependency_links[-1]}. These "\
         "dependencies needed to be updated together."
+      end
+      
+      def vulnerable_multidependency_intro
+        msg = "Bumps #{dependency_links[0]} to a non-vulnerable version "
+
+        if dependencies.count > 2
+          msg += "and updates #{dependency_links[0..-2].join(', ')} and #{dependency_links[-1]}."
+        else
+          msg += "and updates #{dependency_links[1]}."
+        end
+
+        msg += "These dependencies needed to be updated together."
+
+        msg
       end
 
       def from_version_msg(previous_version)
@@ -325,9 +342,9 @@ module Dependabot
                         "to #{new_version(dep)}"
                 end
 
-          if vulnerabilities_fixed[dep.name]&.one?
+          if vulnerabilities_fixed.one?{|d| d.name == dep.name}
             msg += " **This update includes a security fix.**"
-          elsif vulnerabilities_fixed[dep.name]&.any?
+          elsif vulnerabilities_fixed.any?{|d| d.name == dep.name}
             msg += " **This update includes security fixes.**"
           end
 
@@ -342,7 +359,7 @@ module Dependabot
           dependency: dependency,
           source: source,
           metadata_finder: metadata_finder(dependency),
-          vulnerabilities_fixed: vulnerabilities_fixed[dependency.name],
+          vulnerabilities_fixed: vulnerabilities_fixed.select{|d| d.name == dependency.name},
           github_redirection_service: github_redirection_service
         ).to_s
       end
@@ -386,7 +403,7 @@ module Dependabot
             dependencies: dependencies,
             credentials: credentials,
             commit_message_options: commit_message_options,
-            security_fix: vulnerabilities_fixed.values.flatten.any?
+            security_fix: vulnerabilities_fixed.flatten.any?
           )
       end
 

@@ -158,6 +158,7 @@ module Dependabot
         end
 
         def serialized_vulnerability_details(details)
+          debugger
           msg = vulnerability_source_line(details)
 
           msg += "> **#{details['title'].lines.map(&:strip).join(' ')}**\n" if details["title"]

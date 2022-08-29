@@ -785,6 +785,7 @@ dependencies.each do |dep|
       credentials: $options[:credentials],
       source: $source,
       commit_message_options: $update_config.commit_message_options.to_h,
+      vulnerabilities_fixed: updated_deps.select { |d| security_fix?(d) },
       github_redirection_service: Dependabot::PullRequestCreator::DEFAULT_GITHUB_REDIRECTION_SERVICE
     ).message
     puts "Pull Request Title: #{msg.pr_name}"

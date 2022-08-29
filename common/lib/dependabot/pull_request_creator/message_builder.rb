@@ -209,9 +209,9 @@ module Dependabot
 
         msg += " This release includes the previously tagged commit." if switching_from_ref_to_release?(dependency)
 
-        if vulnerabilities_fixed.one?{|d| d.name == dependency.name}
+        if vulnerabilities_fixed.one? { |d| d.name == dependency.name }
           msg += " **This update includes a security fix.**"
-        elsif vulnerabilities_fixed.any?{|d| d.name == dependency.name}
+        elsif vulnerabilities_fixed.any? { |d| d.name == dependency.name }
           msg += " **This update includes security fixes.**"
         end
 
@@ -241,15 +241,15 @@ module Dependabot
         "and #{dependency_links[-1]}. These "\
         "dependencies needed to be updated together."
       end
-      
+
       def vulnerable_multidependency_intro
         msg = "Bumps #{dependency_links[0]} to a non-vulnerable version "
 
-        if dependencies.count > 2
-          msg += "and updates #{dependency_links[0..-2].join(', ')} and #{dependency_links[-1]}."
-        else
-          msg += "and updates #{dependency_links[1]}."
-        end
+        msg += if dependencies.count > 2
+                 "and updates #{dependency_links[0..-2].join(', ')} and #{dependency_links[-1]}."
+               else
+                 "and updates #{dependency_links[1]}."
+               end
 
         msg += "These dependencies needed to be updated together."
 
@@ -342,9 +342,9 @@ module Dependabot
                         "to #{new_version(dep)}"
                 end
 
-          if vulnerabilities_fixed.one?{|d| d.name == dep.name}
+          if vulnerabilities_fixed.one? { |d| d.name == dep.name }
             msg += " **This update includes a security fix.**"
-          elsif vulnerabilities_fixed.any?{|d| d.name == dep.name}
+          elsif vulnerabilities_fixed.any? { |d| d.name == dep.name }
             msg += " **This update includes security fixes.**"
           end
 
@@ -359,7 +359,7 @@ module Dependabot
           dependency: dependency,
           source: source,
           metadata_finder: metadata_finder(dependency),
-          vulnerabilities_fixed: vulnerabilities_fixed.select{|d| d.name == dependency.name},
+          vulnerabilities_fixed: vulnerabilities_fixed.select { |d| d.name == dependency.name },
           github_redirection_service: github_redirection_service
         ).to_s
       end

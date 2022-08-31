@@ -209,9 +209,9 @@ module Dependabot
 
         msg += " This release includes the previously tagged commit." if switching_from_ref_to_release?(dependency)
 
-        if vulnerabilities_fixed.one? { |d| d.name == dependency.name }
+        if vulnerabilities_fixed.one?
           msg += " **This update includes a security fix.**"
-        elsif vulnerabilities_fixed.any? { |d| d.name == dependency.name }
+        elsif vulnerabilities_fixed.any?
           msg += " **This update includes security fixes.**"
         end
 
@@ -342,9 +342,9 @@ module Dependabot
                         "to #{new_version(dep)}"
                 end
 
-          if vulnerabilities_fixed.one? { |d| d.name == dep.name }
+          if vulnerabilities_fixed.one?
             msg += " **This update includes a security fix.**"
-          elsif vulnerabilities_fixed.any? { |d| d.name == dep.name }
+          elsif vulnerabilities_fixed.any?
             msg += " **This update includes security fixes.**"
           end
 

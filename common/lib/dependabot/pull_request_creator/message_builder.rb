@@ -251,7 +251,7 @@ module Dependabot
                  "and updates #{dependency_links[1]}."
                end
 
-        msg += "These dependencies needed to be updated together."
+        msg += "These dependencies need to be updated together."
 
         msg
       end

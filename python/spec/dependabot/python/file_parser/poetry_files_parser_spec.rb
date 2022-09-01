@@ -2,9 +2,9 @@
 
 require "spec_helper"
 require "dependabot/dependency_file"
-require "dependabot/python/file_parser/poetry_files_parser"
+require "dependabot/python/file_parser/pyproject_files_parser"
 
-RSpec.describe Dependabot::Python::FileParser::PoetryFilesParser do
+RSpec.describe Dependabot::Python::FileParser::PyprojectFilesParser do
   let(:parser) { described_class.new(dependency_files: files) }
 
   let(:files) { [pyproject] }

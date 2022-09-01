@@ -359,7 +359,7 @@ module Dependabot
           dependency: dependency,
           source: source,
           metadata_finder: metadata_finder(dependency),
-          vulnerabilities_fixed: vulnerabilities_fixed.select { |d| d.name == dependency.name },
+          vulnerabilities_fixed: nil,
           github_redirection_service: github_redirection_service
         ).to_s
       end
@@ -403,7 +403,7 @@ module Dependabot
             dependencies: dependencies,
             credentials: credentials,
             commit_message_options: commit_message_options,
-            security_fix: vulnerabilities_fixed.flatten.any?
+            security_fix: nil
           )
       end
 

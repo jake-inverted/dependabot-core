@@ -79,6 +79,9 @@ module Dependabot
             # (we wouldn't be able to update it)
             next if dep["version"] == "0.0.1+dependabot"
 
+            # If no requirement, don't add it
+            next if dep["requirement"].empty?
+
             dependencies <<
               Dependency.new(
                 name: normalised_name(dep["name"], dep["extras"]),
